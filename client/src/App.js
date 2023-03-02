@@ -1,4 +1,5 @@
 import "./App.css";
+import Carte from "./components/Carte";
 import Gallery from "./components/Gallery";
 import Header from "./layout/Header";
 
@@ -7,6 +8,7 @@ function App() {
     <div className='App'>
       <Header />
       <Gallery />
+      <Carte />
     </div>
   );
 }
