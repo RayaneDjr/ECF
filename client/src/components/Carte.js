@@ -33,44 +33,44 @@ const Carte = () => {
   return (
     <div className='carte'>
       <h2>LA CARTE</h2>
-      <h4>Menus</h4>
-      {menus.map((menu) => {
-        return (
-          <div className='cardItem' key={menu.id}>
-            <div className='haha'>
-              <div>
-                <span className='title'>{menu.title}</span>
-                <span className='when'>{menu.when}</span>
+      <h3>Menus</h3>
+      <div className='itemsContainer'>
+        {menus.map((menu) => {
+          return (
+            <div className='cardItem' key={menu.id}>
+              <div className='left'>
+                <div className='title'>{menu.title}</div>
+                <div className='when'> ({menu.when})</div>
+                <div className='description'>{menu.description}</div>
               </div>
-              <span className='description'>{menu.description}</span>
+              <div className='price'>
+                <strong>{menu.price}€</strong>
+              </div>
             </div>
-            <div>
-              <span className='price'>{menu.price}€</span>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
       {categories.map((category) => {
         return (
           <>
-            <h4>{category}</h4>
-            {dishes
-              .filter((dish) => dish.category === category)
-              .map((dish) => {
-                return (
-                  <div className='cardItem' key={dish.id}>
-                    <div>
-                      <div>
-                        <span className='title'>{dish.title}</span>
+            <h3>{category}</h3>
+            <div className='itemsContainer'>
+              {dishes
+                .filter((dish) => dish.category === category)
+                .map((dish) => {
+                  return (
+                    <div className='cardItem' key={dish.id}>
+                      <div className='left'>
+                        <div className='title'>{dish.title}</div>
+                        <div className='description'>{dish.description}</div>
                       </div>
-                      <span className='description'>{dish.description}</span>
+                      <div className='price'>
+                        <strong>{dish.price}€</strong>
+                      </div>
                     </div>
-                    <div>
-                      <span className='price'>{dish.price}€</span>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+            </div>
           </>
         );
       })}

@@ -4,14 +4,54 @@
   justify-content: center;
   flex-direction: column;
   margin: auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
   width: 500px;
-  border: solid 1px black;
+  border-radius: 10px;
+  box-shadow: 5px 5px 15px 5px rgba(144, 100, 39, 0.55);
+  width: 700px;
+}
+
+.itemsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .cardItem {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  background-color: red;
+  padding-left: 23px;
+  width: 45%;
+  margin-bottom: 10px;
+}
+
+.left {
+  text-align: start;
+}
+
+.title,
+.price {
+  font-family: "Hind Madurai", sans-serif;
+}
+
+.title {
+  font-size: large;
+  color: #906427;
+}
+
+.when,
+.description {
+  font-family: "Lora", serif;
+}
+
+.when {
+  font-size: small;
+}
+
+h2,
+h3 {
+  font-family: "Montserrat", sans-serif;
+  color: #906427;
+  text-decoration: underline;
 }
