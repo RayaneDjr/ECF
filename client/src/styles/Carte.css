@@ -7,22 +7,24 @@
   margin-top: 40px;
   margin-bottom: 40px;
   width: 500px;
-  border-radius: 10px;
+  border: solid 1px black;
   box-shadow: 5px 5px 15px 5px rgba(144, 100, 39, 0.55);
   width: 700px;
+  padding-bottom: 15px;
 }
 
 .itemsContainer {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
 }
 
 .cardItem {
   display: flex;
   justify-content: space-between;
-  padding-left: 23px;
-  width: 45%;
+  width: 80%;
   margin-bottom: 10px;
 }
 
@@ -43,10 +45,7 @@
 .when,
 .description {
   font-family: "Lora", serif;
-}
-
-.when {
-  font-size: small;
+  font-size: smaller;
 }
 
 h2,
