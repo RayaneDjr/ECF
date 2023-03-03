@@ -1,4 +1,6 @@
 .carte {
+  position: relative;
+  background-color: #b6ac97;
   display: flex;
   align-items: center;
   justify-content: center;
