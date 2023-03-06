@@ -42,15 +42,6 @@ function Gallery() {
     setSlideIndex(index);
   };
 
-  /* {galleryItems.map((galleryItem) => (
-    <div key={galleryItem.id}>
-      <h3>{galleryItem.name}</h3>
-      <img
-        src={`http://localhost:3001/images/${galleryItem.id}`}
-        alt={galleryItem.name}
-      />
-    </div>
-  ))} */
   return (
     <div className='container-slider'>
       {galleryItems.map((galleryItem, index) => {

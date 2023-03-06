@@ -1,9 +1,14 @@
-.bg {
-  position: fixed;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  width: 100%;
-  min-height: 728px;
-  min-width: 1024px;
+body {
+  background-image: url("https://www.sushitimes.fr/wp-content/uploads/2020/04/italian-food-background-1.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+button {
+  font-family: "Montserrat", sans-serif;
+  color: #906427;
+  border: solid 2px #906427;
+  border-radius: 5px;
+  cursor: pointer;
 }

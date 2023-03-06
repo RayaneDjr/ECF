@@ -1,19 +1,15 @@
 import "./App.css";
-import Carte from "./components/Carte";
-import Gallery from "./components/Gallery";
-import Header from "./layout/Header";
+import Home from "./pages/Home";
 
 function App() {
   return (
     <div className='App'>
-      <img
+      {/* <img
         className='bg'
         src='https://www.sushitimes.fr/wp-content/uploads/2020/04/italian-food-background-1.jpg'
         alt='bg'
-      />
-      <Header />
-      <Gallery />
-      <Carte />
+      /> */}
+      <Home />
     </div>
   );
 }

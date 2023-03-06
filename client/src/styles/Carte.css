@@ -6,9 +6,7 @@
   justify-content: center;
   flex-direction: column;
   margin: auto;
-  margin-top: 40px;
-  margin-bottom: 40px;
-  width: 500px;
+  margin-bottom: 30px;
   border: solid 1px black;
   box-shadow: 5px 5px 15px 5px rgba(144, 100, 39, 0.55);
   width: 700px;
@@ -55,4 +53,24 @@ h3 {
   font-family: "Montserrat", sans-serif;
   color: #906427;
   text-decoration: underline;
+}
+
+@media screen and (max-width: 700px) {
+  .carte {
+    width: 350px;
+  }
+  h2 {
+    font-size: large;
+  }
+  h3 {
+    font-size: medium;
+  }
+  .title,
+  .price {
+    font-size: small;
+  }
+  .description,
+  .when {
+    font-size: x-small;
+  }
 }

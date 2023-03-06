@@ -20,3 +20,13 @@ header {
   height: 100%;
   float: right;
 }
+
+@media screen and (max-width: 700px) {
+  .right {
+    width: 150px;
+    flex-direction: column;
+    font-size: small;
+    align-items: end;
+    padding-right: 10px;
+  }
+}
