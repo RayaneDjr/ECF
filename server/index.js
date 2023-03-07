@@ -13,6 +13,8 @@ const menusRouter = require("./routes/Menus");
 app.use("/menus", menusRouter);
 const imagesRouter = require("./routes/Images");
 app.use("/images", imagesRouter);
+const scheduleRouter = require("./routes/Schedule");
+app.use("/schedule", scheduleRouter);
 
 // app.use(express.static(__dirname + "/public"));
 
