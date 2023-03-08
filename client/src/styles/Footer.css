@@ -1,0 +1,7 @@
+.footer {
+  display: flex;
+  justify-content: space-evenly;
+  background-color: white;
+  font-size: smaller;
+  flex-wrap: wrap;
+}

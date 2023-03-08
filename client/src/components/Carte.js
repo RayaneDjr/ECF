@@ -9,21 +9,28 @@ const Carte = () => {
 
   useEffect(() => {
     const fetchDishes = async () => {
-      const response = await axios.get("http://localhost:3001/dishes");
+      try {
+        const response = await axios.get("http://localhost:3001/dishes");
 
-      const duplicatedCategories = Array.from(response.data, (dish) => {
-        return dish.category;
-      });
-      const uniqueCategories = [...new Set(duplicatedCategories)];
+        const duplicatedCategories = Array.from(response.data, (dish) => {
+          return dish.category;
+        });
+        const uniqueCategories = [...new Set(duplicatedCategories)];
 
-      setCategories(uniqueCategories);
-      setDishes(response.data);
+        setCategories(uniqueCategories);
+        setDishes(response.data);
+      } catch (error) {
+        console.error("Unable to fetch dishes:", error);
+      }
     };
 
     const fetchMenus = async () => {
-      const response = await axios.get("http://localhost:3001/menus");
-      console.log(response.data);
-      setMenus(response.data);
+      try {
+        const response = await axios.get("http://localhost:3001/menus");
+        setMenus(response.data);
+      } catch (error) {
+        console.error("Unable to fetch menus:", error);
+      }
     };
 
     fetchDishes();
@@ -50,9 +57,9 @@ const Carte = () => {
           );
         })}
       </div>
-      {categories.map((category) => {
+      {categories.map((category, index) => {
         return (
-          <>
+          <div key={index} className='categoryContainer'>
             <h3>{category}</h3>
             <div className='itemsContainer'>
               {dishes
@@ -71,7 +78,7 @@ const Carte = () => {
                   );
                 })}
             </div>
-          </>
+          </div>
         );
       })}
     </div>

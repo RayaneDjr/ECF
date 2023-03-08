@@ -10,7 +10,6 @@ function Gallery() {
     const fetchGalleryItems = async () => {
       try {
         const response = await axios.get("http://localhost:3001/images");
-        console.log("response.data");
         setGalleryItems(response.data);
       } catch (error) {
         console.error("Unable to fetch gallery items:", error);
