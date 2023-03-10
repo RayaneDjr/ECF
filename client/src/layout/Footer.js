@@ -37,7 +37,11 @@ const Footer = () => {
                 times.push(formatedTime);
               }
             }
-            daySchedule.message = "de " + times[0] + " à " + times[1];
+            daySchedule.message = (
+              <span>
+                {times[0]} - {times[1]}
+              </span>
+            );
           }
 
           if (day.morningOpeningTime) {
@@ -62,15 +66,16 @@ const Footer = () => {
                 times.push(formatedTime);
               }
             }
-            daySchedule.message =
-              "de " +
-              times[0] +
-              " à " +
-              times[1] +
-              " et de " +
-              times[2] +
-              " à " +
-              times[3];
+            daySchedule.message = (
+              <>
+                <span>
+                  {times[0]} - {times[1]}
+                </span>
+                <span>
+                  {times[2]} - {times[3]}
+                </span>
+              </>
+            );
           }
 
           allSchedule = [...allSchedule, daySchedule];
@@ -87,13 +92,17 @@ const Footer = () => {
 
   return (
     <div className='footer'>
-      {schedule.map((day, index) => {
-        return (
-          <span key={index}>
-            {day.day}: {day.message}
-          </span>
-        );
-      })}
+      <h2>Nos horaires d'ouvertures</h2>
+      <div className='scheduleContainer'>
+        {schedule.map((day, index) => {
+          return (
+            <div key={index} className='scheduleItem'>
+              <div className='day'>{day.day}:</div>
+              <div className='message'>{day.message}</div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };
