@@ -22,6 +22,7 @@ module.exports = (sequelize, Datatypes) => {
     },
     guests: {
       type: Datatypes.INTEGER,
+      allowNull: false,
     },
     allergies: {
       type: Datatypes.STRING,

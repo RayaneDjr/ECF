@@ -13,10 +13,6 @@
   width: 300px;
   height: 60px;
 }
-.reservation:hover {
-  color: white;
-  background: #906427;
-}
 
 @media screen and (max-width: 700px) {
   .container {

@@ -12,3 +12,23 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+button:hover {
+  color: white;
+  background: #906427;
+}
+
+h2,
+h3 {
+  font-family: "Montserrat", sans-serif;
+  color: #906427;
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 700px) {
+  h2 {
+    font-size: large;
+  }
+  h3 {
+    font-size: medium;
+  }
+}

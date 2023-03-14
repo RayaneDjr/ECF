@@ -1,7 +1,7 @@
 .footer {
   display: flex;
   width: calc(100% - 2px);
-  height: 100px;
+  min-height: 100px;
   flex-direction: column;
   margin: auto;
   justify-content: space-evenly;
@@ -9,8 +9,6 @@
   background-color: white;
   border: solid 2px #906427;
   font-size: smaller;
-  flex-wrap: wrap;
-  margin-top: 50px;
 }
 
 .scheduleContainer {

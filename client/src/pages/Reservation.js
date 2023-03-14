@@ -1,30 +1,33 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 import Footer from "../layout/Footer";
 import Header from "../layout/Header";
 import "../styles/Reservation.css";
 
 const Reservation = () => {
   const [reservationTimes, setReservationTimes] = useState([]);
+  const navigate = useNavigate();
 
-  const assignTimes2 = async (e) => {
+  const assignTimes = async (e) => {
     const response = await axios.get("http://localhost:3001/schedule");
     const date = new Date(e.target.value);
     const times = [];
 
-    const goodDay = response.data.filter(
-      (item) =>
-        item.day === date.toLocaleDateString("fr-FR", { weekday: "long" })
+    const getDay = response.data.filter(
+      (day) => day.day === date.toLocaleDateString("fr-FR", { weekday: "long" })
     );
 
-    const data = goodDay[0];
-    if (data.close) {
+    const day = getDay[0];
+    if (day.close) {
       times.push("fermé");
     }
 
-    if (data.allDayOpeningTime) {
-      const openingTime = new Date(`2000-01-01T${data.allDayOpeningTime}`);
-      const closingTime = new Date(`2000-01-01T${data.allDayClosingTime}`);
+    if (day.allDayOpeningTime) {
+      const openingTime = new Date(`2000-01-01T${day.allDayOpeningTime}`);
+      const closingTime = new Date(`2000-01-01T${day.allDayClosingTime}`);
 
       for (
         let i = openingTime;
@@ -33,26 +36,26 @@ const Reservation = () => {
       ) {
         if (i.getMinutes() !== 0) {
           const formatedTime = i.getHours() + "h" + i.getMinutes();
-          times.push(formatedTime);
+          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
         } else {
           const formatedTime = i.getHours() + "h";
-          times.push(formatedTime);
+          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
         }
       }
     }
 
-    if (data.morningOpeningTime) {
+    if (day.morningOpeningTime) {
       const morningOpeningTime = new Date(
-        `2000-01-01T${data.morningOpeningTime}`
+        `2000-01-01T${day.morningOpeningTime}`
       );
       const morningClosingTime = new Date(
-        `2000-01-01T${data.morningClosingTime}`
+        `2000-01-01T${day.morningClosingTime}`
       );
       const eveningOpeningTime = new Date(
-        `2000-01-01T${data.eveningOpeningTime}`
+        `2000-01-01T${day.eveningOpeningTime}`
       );
       const eveningClosingTime = new Date(
-        `2000-01-01T${data.eveningClosingTime}`
+        `2000-01-01T${day.eveningClosingTime}`
       );
 
       for (
@@ -62,10 +65,10 @@ const Reservation = () => {
       ) {
         if (i.getMinutes() !== 0) {
           const formatedTime = i.getHours() + "h" + i.getMinutes();
-          times.push(formatedTime);
+          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
         } else {
           const formatedTime = i.getHours() + "h";
-          times.push(formatedTime);
+          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
         }
       }
 
@@ -76,10 +79,10 @@ const Reservation = () => {
       ) {
         if (i.getMinutes() !== 0) {
           const formatedTime = i.getHours() + "h" + i.getMinutes();
-          times.push(formatedTime);
+          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
         } else {
           const formatedTime = i.getHours() + "h";
-          times.push(formatedTime);
+          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
         }
       }
     }
@@ -88,63 +91,153 @@ const Reservation = () => {
     setReservationTimes(times);
   };
 
+  const initalValues = {
+    lastname: "",
+    firstname: "",
+    email: "",
+    date: "",
+    time: "",
+    guests: "",
+    allergies: "",
+  };
+
+  const onSubmit = (data) => {
+    axios.post("http://localhost:3001/bookings", data).then(() => {
+      navigate("/");
+    });
+  };
+
+  const validationSchema = Yup.object().shape({
+    lastname: Yup.string().required("Vous devez saisir un nom"),
+    firstname: Yup.string().required("Vous devez saisir un prénom"),
+    email: Yup.string()
+      .email("Vous devez saisir une addresse email valide")
+      .required("Vous devez saisir une addresse email valide"),
+    date: Yup.date().required("Vous devez choisir une date"),
+    time: Yup.string().required("Vous devez choisir une heure"),
+    guests: Yup.number("Vous devez saisir un nombre entre 0 et 10")
+      .min(0, "Vous devez saisir un nombre entre 0 et 10")
+      .max(10, "Vous devez saisir un nombre entre 0 et 10")
+      .required("Vous devez saisir le nombre d'invités"),
+  });
+
   return (
-    <div className='reservationContainer'>
+    <div className='reservationPageContainer'>
       <Header />
-      <div>
-        <form className='reservationForm'>
-          <label>Nom:</label>
-          <input type='text' name='lastname' />
+      <div className='reservationContainer'>
+        <Formik
+          initialValues={initalValues}
+          onSubmit={onSubmit}
+          validationSchema={validationSchema}>
+          {({ handleChange, values }) => (
+            <Form className='reservationForm'>
+              <h2>Réserver</h2>
+              <div className='inputContainer'>
+                <label>Nom:</label>
+                <ErrorMessage
+                  name='lastname'
+                  component='span'
+                  className='error'
+                />
+                <Field type='text' name='lastname' />
+              </div>
 
-          <label>Prénom:</label>
-          <input type='text' name='firstname' />
+              <div className='inputContainer'>
+                <label>Prénom:</label>
+                <ErrorMessage
+                  name='firstname'
+                  component='span'
+                  className='error'
+                />
+                <Field type='text' name='firstname' />
+              </div>
 
-          <label>Email:</label>
-          <input type='email' name='email' />
+              <div className='inputContainer'>
+                <label>Email:</label>
+                <ErrorMessage name='email' component='span' className='error' />
+                <Field type='email' name='email' />
+              </div>
 
-          <label>Date:</label>
-          <input
-            type='date'
-            name='date'
-            min={new Date().toISOString().split("T")[0]}
-            onChange={assignTimes2}
-          />
+              <div className='inputContainer'>
+                <label>Date:</label>
+                <ErrorMessage name='date' component='span' className='error' />
+                <Field
+                  type='date'
+                  name='date'
+                  min={new Date().toISOString().split("T")[0]}
+                  onChange={(e) => {
+                    handleChange(e);
+                    assignTimes(e);
+                  }}
+                />
+              </div>
 
-          <div>
-            {/* <input type='radio' name='time' id='12' />
-            <label htmlFor='12'>12h</label> */}
-            {reservationTimes.length === 1 ? (
-              <>
-                <div>Fermé</div>
-              </>
-            ) : (
-              <>
-                {reservationTimes.length > 1 && <label>Heure:</label>}
-                {reservationTimes.map((reservationTime) => {
-                  return (
-                    <div key={reservationTime}>
-                      <input type='radio' name='time' id={reservationTime} />
-                      <label htmlFor={reservationTime}>{reservationTime}</label>
-                    </div>
-                  );
-                })}
-              </>
-            )}
-          </div>
+              <div className='inputContainer'>
+                {reservationTimes.length === 1 ? (
+                  <>
+                    <ErrorMessage
+                      name='time'
+                      component='span'
+                      className='error'
+                    />
+                    <div>Fermé</div>
+                  </>
+                ) : (
+                  <>
+                    {reservationTimes.length > 1 && (
+                      <>
+                        <label>Heure:</label>
+                        <ErrorMessage
+                          name='time'
+                          component='span'
+                          className='error'
+                        />
+                        <div className='timesContainer'>
+                          {reservationTimes.map((reservationTime) => {
+                            return (
+                              <div key={reservationTime.value}>
+                                <Field
+                                  type='radio'
+                                  name='time'
+                                  id={reservationTime.value}
+                                  value={reservationTime.value}
+                                />
+                                <label
+                                  htmlFor={reservationTime.value}
+                                  className='times'>
+                                  {reservationTime.time}
+                                </label>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
 
-          <label>Nombre de convives:</label>
-          <input type='number' name='guests' />
+              <div className='inputContainer'>
+                <label>Nombre de convives:</label>
+                <ErrorMessage
+                  name='guests'
+                  component='span'
+                  className='error'
+                />
+                <Field type='number' name='guests' />
+              </div>
 
-          <label>Allergies:</label>
-          <input type='text' name='allergies' />
+              <div className='inputContainer'>
+                <label>Allergies:</label>
+                <Field type='text' name='allergies' />
+              </div>
 
-          <button
-            type='button'
-            className='createReservation'
-            onClick={() => console.log(reservationTimes)}>
-            Réserver
-          </button>
-        </form>
+              <button type='submit' className='createReservation'>
+                Réserver
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
       <div>
         <Footer />
