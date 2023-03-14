@@ -15,8 +15,8 @@ const imagesRouter = require("./routes/Images");
 app.use("/images", imagesRouter);
 const scheduleRouter = require("./routes/Schedule");
 app.use("/schedule", scheduleRouter);
-
-// app.use(express.static(__dirname + "/public"));
+const bookingsRouter = require("./routes/Bookings");
+app.use("/bookings", bookingsRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
