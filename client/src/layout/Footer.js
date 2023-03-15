@@ -87,7 +87,7 @@ const Footer = () => {
 
   return (
     <div className='footer'>
-      <h2>Nos horaires d'ouvertures</h2>
+      <h3>Nos horaires d'ouvertures</h3>
       <div className='scheduleContainer'>
         {schedule.map((day, index) => {
           return (
