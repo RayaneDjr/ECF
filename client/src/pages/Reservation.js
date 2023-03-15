@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import Footer from "../layout/Footer";
-import Header from "../layout/Header";
 import "../styles/Reservation.css";
+import { AuthContext } from "../helpers/AuthContext";
 
 const Reservation = () => {
   const [reservationTimes, setReservationTimes] = useState([]);
   const navigate = useNavigate();
+  const { authState } = useContext(AuthContext);
+  const [initalValues, setInitalValues] = useState({
+    firstname: authState.firstname,
+    lastname: authState.lastname,
+    email: authState.email,
+    date: "",
+    time: "",
+    guests: authState.guests,
+    allergies: undefined,
+    UserId: authState.id,
+  });
 
   const assignTimes = async (e) => {
     try {
@@ -96,25 +106,42 @@ const Reservation = () => {
     }
   };
 
-  const initalValues = {
-    lastname: "",
-    firstname: "",
-    email: "",
-    date: "",
-    time: "",
-    guests: "",
-    allergies: null,
-  };
+  // const initalValues = {
+  //   firstname: authState.firstname,
+  //   lastname: authState.lastname,
+  //   email: authState.email,
+  //   date: "",
+  //   time: "",
+  //   guests: authState.guests,
+  //   allergies: undefined,
+  //   UserId: authState.id,
+  // };
+
+  useEffect(() => {
+    setInitalValues({
+      firstname: authState.firstname,
+      lastname: authState.lastname,
+      email: authState.email,
+      date: "",
+      time: "",
+      guests: authState.guests,
+      allergies: undefined,
+      UserId: authState.id,
+    });
+  }, [authState]);
 
   const onSubmit = (data) => {
-    axios.post("http://localhost:3001/bookings", data).then(() => {
-      navigate("/");
-    });
+    axios
+      .post("http://localhost:3001/bookings", data)
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => console.error("Error in submit:", error));
   };
 
   const validationSchema = Yup.object().shape({
-    lastname: Yup.string().required("Vous devez saisir un nom"),
     firstname: Yup.string().required("Vous devez saisir un prénom"),
+    lastname: Yup.string().required("Vous devez saisir un nom"),
     email: Yup.string()
       .email("Vous devez saisir une addresse email valide")
       .required("Vous devez saisir une addresse email valide"),
@@ -123,131 +150,113 @@ const Reservation = () => {
     guests: Yup.number("Vous devez saisir un nombre entre 0 et 10")
       .min(0, "Vous devez saisir un nombre entre 0 et 10")
       .max(10, "Vous devez saisir un nombre entre 0 et 10")
-      .required("Vous devez saisir le nombre d'invités"),
+      .required("Vous devez saisir un nombre entre 0 et 10")
+      .typeError("Vous devez saisir un nombre entre 0 et 10"),
   });
 
   return (
-    <div className='reservationPageContainer'>
-      <Header />
-      <div className='reservationContainer'>
-        <Formik
-          initialValues={initalValues}
-          onSubmit={onSubmit}
-          validationSchema={validationSchema}>
-          {({ handleChange, values }) => (
-            <Form className='reservationForm'>
-              <h2>Réserver</h2>
-              <div className='inputContainer'>
-                <label>Nom:</label>
-                <ErrorMessage
-                  name='lastname'
-                  component='span'
-                  className='error'
-                />
-                <Field type='text' name='lastname' />
-              </div>
+    <Formik
+      enableReinitialize
+      initialValues={initalValues}
+      onSubmit={onSubmit}
+      validationSchema={validationSchema}>
+      {({ handleChange, values }) => (
+        <Form className='box reservationFormContainer'>
+          <h2>Réserver</h2>
 
-              <div className='inputContainer'>
-                <label>Prénom:</label>
-                <ErrorMessage
-                  name='firstname'
-                  component='span'
-                  className='error'
-                />
-                <Field type='text' name='firstname' />
-              </div>
+          <div className='inputContainer'>
+            <label>Prénom:</label>
+            <ErrorMessage name='firstname' component='span' className='error' />
+            <Field type='text' name='firstname' />
+          </div>
 
-              <div className='inputContainer'>
-                <label>Email:</label>
-                <ErrorMessage name='email' component='span' className='error' />
-                <Field type='email' name='email' />
-              </div>
+          <div className='inputContainer'>
+            <label>Nom:</label>
+            <ErrorMessage name='lastname' component='span' className='error' />
+            <Field type='text' name='lastname' />
+          </div>
 
-              <div className='inputContainer'>
-                <label>Date:</label>
-                <ErrorMessage name='date' component='span' className='error' />
-                <Field
-                  type='date'
-                  name='date'
-                  min={new Date().toISOString().split("T")[0]}
-                  onChange={(e) => {
-                    handleChange(e);
-                    assignTimes(e);
-                  }}
-                />
-              </div>
+          <div className='inputContainer'>
+            <label>Email:</label>
+            <ErrorMessage name='email' component='span' className='error' />
+            <Field type='email' name='email' />
+          </div>
 
-              <div className='inputContainer'>
-                {reservationTimes.length === 1 ? (
+          <div className='inputContainer'>
+            <label>Date:</label>
+            <ErrorMessage name='date' component='span' className='error' />
+            <Field
+              type='date'
+              name='date'
+              min={new Date().toISOString().split("T")[0]}
+              onChange={(e) => {
+                handleChange(e);
+                assignTimes(e);
+              }}
+            />
+          </div>
+
+          <div className='inputContainer'>
+            {reservationTimes.length === 1 ? (
+              <>
+                <ErrorMessage name='time' component='span' className='error' />
+                <div>Fermé</div>
+              </>
+            ) : (
+              <>
+                {reservationTimes.length > 1 && (
                   <>
+                    <label>Heure:</label>
                     <ErrorMessage
                       name='time'
                       component='span'
                       className='error'
                     />
-                    <div>Fermé</div>
-                  </>
-                ) : (
-                  <>
-                    {reservationTimes.length > 1 && (
-                      <>
-                        <label>Heure:</label>
-                        <ErrorMessage
-                          name='time'
-                          component='span'
-                          className='error'
-                        />
-                        <div className='timesContainer'>
-                          {reservationTimes.map((reservationTime) => {
-                            return (
-                              <div key={reservationTime.value}>
-                                <Field
-                                  type='radio'
-                                  name='time'
-                                  id={reservationTime.value}
-                                  value={reservationTime.value}
-                                />
-                                <label
-                                  htmlFor={reservationTime.value}
-                                  className='times'>
-                                  {reservationTime.time}
-                                </label>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </>
-                    )}
+                    <div className='timesContainer'>
+                      {reservationTimes.map((reservationTime) => {
+                        return (
+                          <div key={reservationTime.value}>
+                            <Field
+                              type='radio'
+                              name='time'
+                              id={reservationTime.value}
+                              value={reservationTime.value}
+                            />
+                            <label
+                              htmlFor={reservationTime.value}
+                              className='times'>
+                              {reservationTime.time}
+                            </label>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </>
                 )}
-              </div>
+              </>
+            )}
+          </div>
 
-              <div className='inputContainer'>
-                <label>Nombre de convives:</label>
-                <ErrorMessage
-                  name='guests'
-                  component='span'
-                  className='error'
-                />
-                <Field type='number' name='guests' />
-              </div>
+          <div className='inputContainer'>
+            <label>Nombre de convives:</label>
+            <ErrorMessage name='guests' component='span' className='error' />
+            <Field type='number' name='guests' />
+          </div>
 
-              <div className='inputContainer'>
-                <label>Allergies:</label>
-                <Field type='text' name='allergies' />
-              </div>
+          <div className='inputContainer'>
+            <label>Allergies:</label>
+            <Field type='text' name='allergies' />
+          </div>
 
-              <button type='submit' className='createReservation'>
-                Réserver
-              </button>
-            </Form>
-          )}
-        </Formik>
-      </div>
-      <div>
-        <Footer />
-      </div>
-    </div>
+          <button
+            type='click'
+            className='submit'
+            onClick={() => console.log(authState)}>
+            Réserver
+          </button>
+        </Form>
+      )}
+    </Formik>
   );
 };
 

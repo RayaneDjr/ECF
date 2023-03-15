@@ -38,7 +38,7 @@ const Carte = () => {
   }, []);
 
   return (
-    <div className='carte'>
+    <div className='box carte'>
       <h2>LA CARTE</h2>
       <h3>Menus</h3>
       <div className='itemsContainer'>

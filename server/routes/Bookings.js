@@ -3,9 +3,10 @@ const router = express.Router();
 const { Bookings } = require("../models");
 
 router.post("/", (req, res) => {
-  const { firstname, lastname, email, date, time, guests, allergies } =
+  const { firstname, lastname, email, date, time, guests, allergies, UserId } =
     req.body;
   Bookings.create({
+    UserId,
     firstname,
     lastname,
     email,

@@ -1,6 +1,6 @@
-.footer {
+footer {
   display: flex;
-  width: calc(100% - 2px);
+  width: 100vw - 2px;
   flex-direction: column;
   margin: auto;
   justify-content: space-evenly;

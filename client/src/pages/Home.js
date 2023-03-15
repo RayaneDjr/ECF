@@ -1,15 +1,12 @@
 import React from "react";
-import Header from "../layout/Header";
 import Gallery from "../components/Gallery";
 import Carte from "../components/Carte";
 import "../styles/Home.css";
-import Footer from "../layout/Footer";
 import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
-    <>
-      <Header />
+    <div>
       <div className='container'>
         <Link to='/reservation'>
           <button type='button' className='reservation'>
@@ -21,8 +18,7 @@ const Home = () => {
         </div>
       </div>
       <Carte />
-      <Footer />
-    </>
+    </div>
   );
 };
 
