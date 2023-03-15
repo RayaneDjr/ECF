@@ -12,83 +12,88 @@ const Reservation = () => {
   const navigate = useNavigate();
 
   const assignTimes = async (e) => {
-    const response = await axios.get("http://localhost:3001/schedule");
-    const date = new Date(e.target.value);
-    const times = [];
+    try {
+      const response = await axios.get("http://localhost:3001/schedule");
+      const date = new Date(e.target.value);
+      const times = [];
 
-    const getDay = response.data.filter(
-      (day) => day.day === date.toLocaleDateString("fr-FR", { weekday: "long" })
-    );
+      const getDay = response.data.filter(
+        (day) =>
+          day.day === date.toLocaleDateString("fr-FR", { weekday: "long" })
+      );
 
-    const day = getDay[0];
-    if (day.close) {
-      times.push("fermé");
-    }
-
-    if (day.allDayOpeningTime) {
-      const openingTime = new Date(`2000-01-01T${day.allDayOpeningTime}`);
-      const closingTime = new Date(`2000-01-01T${day.allDayClosingTime}`);
-
-      for (
-        let i = openingTime;
-        i <= closingTime;
-        i.setMinutes(i.getMinutes() + 15)
-      ) {
-        if (i.getMinutes() !== 0) {
-          const formatedTime = i.getHours() + "h" + i.getMinutes();
-          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
-        } else {
-          const formatedTime = i.getHours() + "h";
-          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
-        }
+      const day = getDay[0];
+      if (day.close) {
+        times.push("fermé");
       }
-    }
 
-    if (day.morningOpeningTime) {
-      const morningOpeningTime = new Date(
-        `2000-01-01T${day.morningOpeningTime}`
-      );
-      const morningClosingTime = new Date(
-        `2000-01-01T${day.morningClosingTime}`
-      );
-      const eveningOpeningTime = new Date(
-        `2000-01-01T${day.eveningOpeningTime}`
-      );
-      const eveningClosingTime = new Date(
-        `2000-01-01T${day.eveningClosingTime}`
-      );
+      if (day.allDayOpeningTime) {
+        const openingTime = new Date(`2000-01-01T${day.allDayOpeningTime}`);
+        const closingTime = new Date(`2000-01-01T${day.allDayClosingTime}`);
 
-      for (
-        let i = morningOpeningTime;
-        i <= morningClosingTime;
-        i.setMinutes(i.getMinutes() + 15)
-      ) {
-        if (i.getMinutes() !== 0) {
-          const formatedTime = i.getHours() + "h" + i.getMinutes();
-          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
-        } else {
-          const formatedTime = i.getHours() + "h";
-          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+        for (
+          let i = openingTime;
+          i <= closingTime;
+          i.setMinutes(i.getMinutes() + 15)
+        ) {
+          if (i.getMinutes() !== 0) {
+            const formatedTime = i.getHours() + "h" + i.getMinutes();
+            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+          } else {
+            const formatedTime = i.getHours() + "h";
+            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+          }
         }
       }
 
-      for (
-        let i = eveningOpeningTime;
-        i <= eveningClosingTime;
-        i.setMinutes(i.getMinutes() + 15)
-      ) {
-        if (i.getMinutes() !== 0) {
-          const formatedTime = i.getHours() + "h" + i.getMinutes();
-          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
-        } else {
-          const formatedTime = i.getHours() + "h";
-          times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+      if (day.morningOpeningTime) {
+        const morningOpeningTime = new Date(
+          `2000-01-01T${day.morningOpeningTime}`
+        );
+        const morningClosingTime = new Date(
+          `2000-01-01T${day.morningClosingTime}`
+        );
+        const eveningOpeningTime = new Date(
+          `2000-01-01T${day.eveningOpeningTime}`
+        );
+        const eveningClosingTime = new Date(
+          `2000-01-01T${day.eveningClosingTime}`
+        );
+
+        for (
+          let i = morningOpeningTime;
+          i <= morningClosingTime;
+          i.setMinutes(i.getMinutes() + 15)
+        ) {
+          if (i.getMinutes() !== 0) {
+            const formatedTime = i.getHours() + "h" + i.getMinutes();
+            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+          } else {
+            const formatedTime = i.getHours() + "h";
+            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+          }
+        }
+
+        for (
+          let i = eveningOpeningTime;
+          i <= eveningClosingTime;
+          i.setMinutes(i.getMinutes() + 15)
+        ) {
+          if (i.getMinutes() !== 0) {
+            const formatedTime = i.getHours() + "h" + i.getMinutes();
+            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+          } else {
+            const formatedTime = i.getHours() + "h";
+            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+          }
         }
       }
-    }
 
-    console.log(times);
-    setReservationTimes(times);
+      console.log(times);
+      setReservationTimes(times);
+    } catch (error) {
+      console.error("Unable to fetch schedule:", error);
+    }
   };
 
   const initalValues = {
@@ -98,7 +103,7 @@ const Reservation = () => {
     date: "",
     time: "",
     guests: "",
-    allergies: "",
+    allergies: null,
   };
 
   const onSubmit = (data) => {

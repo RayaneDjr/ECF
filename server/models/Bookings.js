@@ -1,31 +1,36 @@
-module.exports = (sequelize, Datatypes) => {
+module.exports = (sequelize, DataTypes) => {
   const Bookings = sequelize.define("Bookings", {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+    },
     firstname: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     lastname: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     date: {
-      type: Datatypes.DATE,
+      type: DataTypes.DATE,
       allowNull: false,
     },
     time: {
-      type: Datatypes.TIME,
+      type: DataTypes.TIME,
       allowNull: false,
     },
     guests: {
-      type: Datatypes.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     allergies: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
     },
   });
 

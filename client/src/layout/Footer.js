@@ -78,8 +78,12 @@ const Footer = () => {
 
   useEffect(() => {
     const fetchSchedule = async () => {
-      const response = await axios.get("http://localhost:3001/schedule");
-      assignSchedule(response.data);
+      try {
+        const response = await axios.get("http://localhost:3001/schedule");
+        assignSchedule(response.data);
+      } catch (error) {
+        console.error("Unable to fetch schedule:", error);
+      }
     };
 
     fetchSchedule();

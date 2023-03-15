@@ -17,6 +17,8 @@ const scheduleRouter = require("./routes/Schedule");
 app.use("/schedule", scheduleRouter);
 const bookingsRouter = require("./routes/Bookings");
 app.use("/bookings", bookingsRouter);
+const usersRouter = require("./routes/Users");
+app.use("/users", usersRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(3001, () => {
