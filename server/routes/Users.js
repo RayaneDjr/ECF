@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
   const { firstname, lastname, email, password, role, guests, allergies } =
     req.body;
   const user = await Users.findOne({ where: { email } });
-  if (user) return res.json({ error: "Cet addresse email est déjà utilisée" });
+  if (user) return res.json({ error: "Cet adresse email est déjà utilisée" });
   bcrypt.hash(password, 10).then((hash) => {
     Users.create({
       firstname,
@@ -31,11 +31,11 @@ router.post("/login", async (req, res) => {
   const user = await Users.findOne({ where: { email } });
 
   if (!user)
-    return res.json({ error: "Mot de passe ou addresse email invalide" });
+    return res.json({ error: "Mot de passe ou adresse email invalide" });
 
   bcrypt.compare(password, user.password).then((match) => {
     if (!match)
-      return res.json({ error: "Mot de passe ou addresse email invalide" });
+      return res.json({ error: "Mot de passe ou adresse email invalide" });
     const accessToken = sign(
       {
         id: user.id,
@@ -87,7 +87,7 @@ router.put("/update", validateToken, async (req, res) => {
   );
   bcrypt.compare(oldPassword, user.password).then((match) => {
     if (!match) {
-      return res.json({ error: "Wrong Password Entered!" });
+      return res.json({ error: "Mauvais mot de passe" });
     }
     if (newPassword) {
       bcrypt.hash(newPassword, 10).then((hash) => {
@@ -133,10 +133,6 @@ router.put("/update", validateToken, async (req, res) => {
         });
     }
   });
-});
-
-router.get("/auth", validateToken, (req, res) => {
-  res.json(req.user);
 });
 
 module.exports = router;

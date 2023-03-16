@@ -1,6 +1,4 @@
-@media screen and (max-width: 700px) {
-  .inscription {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+.inscription {
+  margin-top: 14px;
+  margin-bottom: 14px;
 }

@@ -1,29 +1,46 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import axios from "axios";
 import "../styles/Inscription.css";
+import { AuthContext } from "../helpers/AuthContext";
 
 const Profile = () => {
   const navigate = useNavigate();
-
-  const initalValues = {
+  const { authState, setAuthState } = useContext(AuthContext);
+  const [initalValues, setInitialValues] = useState({
     firstname: "",
     lastname: "",
     email: "",
-    password: "",
+    oldPassword: "",
+    newPassword: "",
     guests: undefined,
     allergies: undefined,
-  };
+  });
 
   const onSubmit = (data) => {
     axios
-      .post("http://localhost:3001/users", data)
+      .put("http://localhost:3001/users/update", data, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
       .then((response) => {
         if (response.data.error) {
           alert(response.data.error);
         } else {
+          localStorage.setItem("accessToken", response.data.token);
+          setAuthState({
+            id: response.data.id,
+            firstname: response.data.firstname,
+            lastname: response.data.lastname,
+            email: response.data.email,
+            role: response.data.role,
+            guests: response.data.guests,
+            allergies: response.data.allergies,
+            status: true,
+          });
           navigate("/");
         }
       })
@@ -33,7 +50,9 @@ const Profile = () => {
   const validationSchema = Yup.object().shape({
     firstname: Yup.string().required("Vous devez saisir un prénom"),
     lastname: Yup.string().required("Vous devez saisir un nom"),
-    password: Yup.string().required("Vous devez saisir un mot de passe"),
+    oldPassword: Yup.string().required(
+      "Vous devez saisir votre ancien mot de passe"
+    ),
     email: Yup.string()
       .email("Vous devez saisir une addresse email valide")
       .required("Vous devez saisir une addresse email valide"),
@@ -43,8 +62,21 @@ const Profile = () => {
       .required("Vous devez saisir un nombre entre 0 et 10"),
   });
 
+  useEffect(() => {
+    setInitialValues({
+      firstname: authState.firstname,
+      lastname: authState.lastname,
+      email: authState.email,
+      oldPassword: "",
+      newPassword: "",
+      guests: authState.guests,
+      allergies: authState.allergies,
+    });
+  }, [authState]);
+
   return (
     <Formik
+      enableReinitialize
       initialValues={initalValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}>
@@ -70,9 +102,15 @@ const Profile = () => {
         </div>
 
         <div className='inputContainer'>
-          <label>Mot de passe:</label>
-          <ErrorMessage name='password' component='span' className='error' />
-          <Field type='password' name='password' />
+          <label>Ancien mot de passe:</label>
+          <ErrorMessage name='oldPassword' component='span' className='error' />
+          <Field type='password' name='oldPassword' />
+        </div>
+
+        <div className='inputContainer'>
+          <label>Nouveau mot de passe:</label>
+          <ErrorMessage name='newPassword' component='span' className='error' />
+          <Field type='password' name='newPassword' />
         </div>
 
         <div className='inputContainer'>
@@ -87,7 +125,7 @@ const Profile = () => {
         </div>
 
         <button type='submit' className='submit'>
-          Créer
+          Modifier
         </button>
       </Form>
     </Formik>

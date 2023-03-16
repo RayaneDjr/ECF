@@ -10,7 +10,7 @@ const Reservation = () => {
   const [reservationTimes, setReservationTimes] = useState([]);
   const navigate = useNavigate();
   const { authState } = useContext(AuthContext);
-  const [initalValues, setInitalValues] = useState({
+  const [initalValues, setInitialValues] = useState({
     firstname: authState.firstname,
     lastname: authState.lastname,
     email: authState.email,
@@ -106,19 +106,8 @@ const Reservation = () => {
     }
   };
 
-  // const initalValues = {
-  //   firstname: authState.firstname,
-  //   lastname: authState.lastname,
-  //   email: authState.email,
-  //   date: "",
-  //   time: "",
-  //   guests: authState.guests,
-  //   allergies: undefined,
-  //   UserId: authState.id,
-  // };
-
   useEffect(() => {
-    setInitalValues({
+    setInitialValues({
       firstname: authState.firstname,
       lastname: authState.lastname,
       email: authState.email,

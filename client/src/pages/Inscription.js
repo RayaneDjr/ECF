@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import axios from "axios";
+import "../styles/Inscription.css";
 
 const Inscription = () => {
   const navigate = useNavigate();
@@ -38,7 +39,8 @@ const Inscription = () => {
       .required("Vous devez saisir une addresse email valide"),
     guests: Yup.number("Vous devez saisir un nombre entre 0 et 10")
       .min(0, "Vous devez saisir un nombre entre 0 et 10")
-      .max(10, "Vous devez saisir un nombre entre 0 et 10"),
+      .max(10, "Vous devez saisir un nombre entre 0 et 10")
+      .required("Vous devez saisir un nombre entre 0 et 10"),
   });
 
   return (
@@ -46,7 +48,7 @@ const Inscription = () => {
       initialValues={initalValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}>
-      <Form className='box'>
+      <Form className='box inscription'>
         <h2>Créer un compte</h2>
 
         <div className='inputContainer'>
