@@ -61,6 +61,80 @@ router.post("/login", async (req, res) => {
   });
 });
 
+router.put("/update", validateToken, async (req, res) => {
+  let {
+    oldPassword,
+    newPassword,
+    firstname,
+    lastname,
+    email,
+    guests,
+    allergies,
+  } = req.body;
+  if (!allergies) allergies = null;
+  const user = await Users.findOne({ where: { id: req.user.id } });
+  const accessToken = sign(
+    {
+      id: req.user.id,
+      firstname,
+      lastname,
+      email,
+      role: req.user.role,
+      guests,
+      allergies,
+    },
+    "importantSecret"
+  );
+  bcrypt.compare(oldPassword, user.password).then((match) => {
+    if (!match) {
+      return res.json({ error: "Wrong Password Entered!" });
+    }
+    if (newPassword) {
+      bcrypt.hash(newPassword, 10).then((hash) => {
+        Users.update(
+          { firstname, lastname, email, guests, allergies, password: hash },
+          { where: { id: req.user.id } }
+        )
+          .then(() => {
+            return res.json({
+              token: accessToken,
+              id: req.user.id,
+              firstname,
+              lastname,
+              email,
+              role: req.user.role,
+              guests,
+              allergies,
+            });
+          })
+          .catch((err) => {
+            return res.status(500).json({ error: err });
+          });
+      });
+    } else {
+      Users.update(
+        { firstname, lastname, email, guests, allergies },
+        { where: { id: req.user.id } }
+      )
+        .then(() => {
+          return res.json({
+            token: accessToken,
+            id: req.user.id,
+            firstname,
+            lastname,
+            email,
+            role: req.user.role,
+            guests,
+            allergies,
+          });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: err });
+        });
+    }
+  });
+});
+
 router.get("/auth", validateToken, (req, res) => {
   res.json(req.user);
 });

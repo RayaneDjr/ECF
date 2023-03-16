@@ -43,7 +43,9 @@ const Header = () => {
             {authState.role === "admin" && (
               <Link className='link'>Administration</Link>
             )}
-            <Link className='link'>{authState.email}</Link>
+            <Link to={`/profile/${authState.id}`} className='link'>
+              {authState.email}
+            </Link>
           </>
         )}
       </div>

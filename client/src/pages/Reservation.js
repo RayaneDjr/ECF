@@ -125,7 +125,7 @@ const Reservation = () => {
       date: "",
       time: "",
       guests: authState.guests,
-      allergies: undefined,
+      allergies: authState.allergies,
       UserId: authState.id,
     });
   }, [authState]);
