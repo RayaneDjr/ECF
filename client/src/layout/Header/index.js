@@ -40,10 +40,10 @@ const Header = () => {
             <Link to='/' onClick={logout} className='link'>
               Se déconnecter
             </Link>
-            <Link className='link'>{authState.email}</Link>
             {authState.role === "admin" && (
               <Link className='link'>Administration</Link>
             )}
+            <Link className='link'>{authState.email}</Link>
           </>
         )}
       </div>
