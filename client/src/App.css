@@ -70,6 +70,12 @@ label {
   margin-bottom: 20px;
 }
 
+.delete {
+  cursor: pointer;
+  margin-left: 5px;
+  width: 15px;
+}
+
 @media screen and (max-width: 700px) {
   h2 {
     font-size: large;
@@ -85,5 +91,8 @@ label {
     height: 30px;
     width: 150px;
     font-size: medium;
+  }
+  .delete {
+    width: 10px;
   }
 }

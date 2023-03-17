@@ -3,12 +3,6 @@
   padding-bottom: 15px;
 }
 
-.delete {
-  cursor: pointer;
-  margin-left: 5px;
-  width: 15px;
-}
-
 .itemsContainer,
 .categoryContainer {
   display: flex;
@@ -56,8 +50,5 @@
   .description,
   .when {
     font-size: x-small;
-  }
-  .delete {
-    width: 10px;
   }
 }

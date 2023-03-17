@@ -3,13 +3,15 @@ import axios from "axios";
 import "../../styles/Gallery.css";
 import BtnSlider from "./BtnSlider";
 
-function Gallery() {
+function Gallery({ reload }) {
   const [galleryItems, setGalleryItems] = useState([]);
+  const [slideIndex, setSlideIndex] = useState(1);
 
   useEffect(() => {
     const fetchGalleryItems = async () => {
       try {
         const response = await axios.get("http://localhost:3001/images");
+        setSlideIndex(1);
         setGalleryItems(response.data);
       } catch (error) {
         console.error("Unable to fetch gallery items:", error);
@@ -17,9 +19,7 @@ function Gallery() {
     };
 
     fetchGalleryItems();
-  }, []);
-
-  const [slideIndex, setSlideIndex] = useState(1);
+  }, [reload]);
 
   const nextSlide = () => {
     if (slideIndex !== galleryItems.length) {

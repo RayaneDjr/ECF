@@ -4,6 +4,7 @@ const { Images } = require("../models");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -21,14 +22,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/", upload.single("image"), (req, res) => {
+router.post("/", validateToken, upload.single("image"), (req, res) => {
   const { filename, originalname } = req.file;
-  Images.create({
-    name: originalname,
-    filename,
-  })
-    .then((image) => res.json(image))
-    .catch((err) => res.status(500).json({ error: err.message }));
+  if (req.user.role === "admin") {
+    Images.create({
+      name: originalname,
+      filename,
+    })
+      .then((image) => res.json(image))
+      .catch((err) => res.status(500).json({ error: err.message }));
+  } else {
+    return res.json("not authorized");
+  }
 });
 
 router.get("/", async (req, res) => {
@@ -50,21 +55,25 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", validateToken, async (req, res) => {
   const id = req.params.id;
-  try {
-    const image = await Images.findByPk(id);
-    fs.unlink(`uploads/${image.filename}`, () => {
-      Images.destroy({ where: { id } })
-        .then(() => {
-          res.json("delete successfull");
-        })
-        .catch((err) => {
-          res.status(500).json({ error: err.message });
-        });
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  if (req.user.role === "admin") {
+    try {
+      const image = await Images.findByPk(id);
+      fs.unlink(`uploads/${image.filename}`, () => {
+        Images.destroy({ where: { id } })
+          .then(() => {
+            res.json("delete successfull");
+          })
+          .catch((err) => {
+            res.status(500).json({ error: err.message });
+          });
+      });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  } else {
+    return res.json("not authorized");
   }
 });
 
