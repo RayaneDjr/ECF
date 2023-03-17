@@ -47,7 +47,7 @@ const GererCarte = () => {
     title: Yup.string().required("Vous devez saisir un titre"),
     description: Yup.string().required("Vous devez saisir une description"),
     price: Yup.number().required("Vous devez saisir un prix"),
-    category: Yup.string(),
+    when: Yup.string(),
   });
 
   return (
