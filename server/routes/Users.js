@@ -6,8 +6,9 @@ const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.post("/", async (req, res) => {
-  const { firstname, lastname, email, password, role, guests, allergies } =
+  let { firstname, lastname, email, password, role, guests, allergies } =
     req.body;
+  if (!allergies) allergies = null;
   const user = await Users.findOne({ where: { email } });
   if (user) return res.json({ error: "Cet adresse email est déjà utilisée" });
   bcrypt.hash(password, 10).then((hash) => {
