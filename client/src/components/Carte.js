@@ -1,41 +1,52 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "../styles/Carte.css";
+import deleteIcon from "../icons/delete.svg";
 
-const Carte = () => {
+const Carte = ({ enableDelete, reload }) => {
   const [dishes, setDishes] = useState([]);
   const [menus, setMenus] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const fetchDishes = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/dishes");
+
+      const duplicatedCategories = Array.from(response.data, (dish) => {
+        return dish.category;
+      });
+      const uniqueCategories = [...new Set(duplicatedCategories)];
+
+      setCategories(uniqueCategories);
+      setDishes(response.data);
+    } catch (error) {
+      console.error("Unable to fetch dishes:", error);
+    }
+  };
+
+  const fetchMenus = async () => {
+    try {
+      const response = await axios.get("http://localhost:3001/menus");
+      setMenus(response.data);
+    } catch (error) {
+      console.error("Unable to fetch menus:", error);
+    }
+  };
+
+  const deleteMenu = (id) => {
+    axios.delete(`http://localhost:3001/menus/${id}`).then(() => fetchMenus());
+  };
+
+  const deleteDish = (id) => {
+    axios
+      .delete(`http://localhost:3001/dishes/${id}`)
+      .then(() => fetchDishes());
+  };
+
   useEffect(() => {
-    const fetchDishes = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/dishes");
-
-        const duplicatedCategories = Array.from(response.data, (dish) => {
-          return dish.category;
-        });
-        const uniqueCategories = [...new Set(duplicatedCategories)];
-
-        setCategories(uniqueCategories);
-        setDishes(response.data);
-      } catch (error) {
-        console.error("Unable to fetch dishes:", error);
-      }
-    };
-
-    const fetchMenus = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/menus");
-        setMenus(response.data);
-      } catch (error) {
-        console.error("Unable to fetch menus:", error);
-      }
-    };
-
     fetchDishes();
     fetchMenus();
-  }, []);
+  }, [reload]);
 
   return (
     <div className='box carte'>
@@ -46,8 +57,16 @@ const Carte = () => {
           return (
             <div className='cardItem' key={menu.id}>
               <div className='left'>
-                <div className='title'>{menu.title}</div>
-                <div className='when'> ({menu.when})</div>
+                <div className='title'>
+                  {menu.title}
+                  {enableDelete && (
+                    <img
+                      src={deleteIcon}
+                      alt='deleteIcon'
+                      onClick={() => deleteMenu(menu.id)}></img>
+                  )}
+                </div>
+                {menu.when && <div className='when'> ({menu.when})</div>}
                 <div className='description'>{menu.description}</div>
               </div>
               <div className='price'>
@@ -68,7 +87,15 @@ const Carte = () => {
                   return (
                     <div className='cardItem' key={dish.id}>
                       <div className='left'>
-                        <div className='title'>{dish.title}</div>
+                        <div className='title'>
+                          {dish.title}
+                          {enableDelete && (
+                            <img
+                              src={deleteIcon}
+                              alt='deleteIcon'
+                              onClick={() => deleteDish(dish.id)}></img>
+                          )}
+                        </div>
                         <div className='description'>{dish.description}</div>
                       </div>
                       <div className='price'>

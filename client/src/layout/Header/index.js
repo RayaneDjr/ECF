@@ -41,9 +41,11 @@ const Header = () => {
               Se déconnecter
             </Link>
             {authState.role === "admin" && (
-              <Link className='link'>Administration</Link>
+              <Link to='/administration' className='link'>
+                Administration
+              </Link>
             )}
-            <Link to={`/profile/${authState.id}`} className='link'>
+            <Link to='/profile' className='link'>
               {authState.email}
             </Link>
           </>

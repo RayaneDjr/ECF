@@ -10,6 +10,9 @@ import { AuthContext } from "./helpers/AuthContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Profile from "./pages/Profile";
+import Administration from "./pages/Administration";
+import PageNotFound from "./pages/PageNotFound";
+import GererCarte from "./pages/GererCarte";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -62,7 +65,15 @@ function App() {
               <Route path='/reservation' element={<Reservation />} />
               <Route path='/inscription' element={<Inscription />} />
               <Route path='/connexion' element={<Connexion />} />
-              <Route path='/profile/:id' element={<Profile />} />
+              <Route path='/profile' element={<Profile />} />
+              {authState.status && authState.role === "admin" && (
+                <Route path='/administration' element={<Administration />} />
+              )}
+              <Route path='/profile' element={<Profile />} />
+              {authState.status && authState.role === "admin" && (
+                <Route path='/carte' element={<GererCarte />} />
+              )}
+              <Route path='*' element={<PageNotFound />} />
             </Routes>
           </main>
           <div>

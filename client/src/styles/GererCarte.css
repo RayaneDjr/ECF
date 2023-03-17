@@ -1,0 +1,21 @@
+.formsContainer {
+  display: flex;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.dishForm,
+.menuForm {
+  width: 350px;
+}
+
+@media screen and (max-width: 700px) {
+  .formsContainer {
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .dishForm {
+    margin-bottom: 20px;
+  }
+}
