@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import Administration from "./pages/Administration";
 import PageNotFound from "./pages/PageNotFound";
 import GererCarte from "./pages/GererCarte";
+import GererGalerie from "./pages/GererGalerie";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -72,6 +73,9 @@ function App() {
               <Route path='/profile' element={<Profile />} />
               {authState.status && authState.role === "admin" && (
                 <Route path='/carte' element={<GererCarte />} />
+              )}
+              {authState.status && authState.role === "admin" && (
+                <Route path='/galerie' element={<GererGalerie />} />
               )}
               <Route path='*' element={<PageNotFound />} />
             </Routes>

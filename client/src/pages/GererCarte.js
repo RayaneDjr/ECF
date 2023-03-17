@@ -23,17 +23,29 @@ const GererCarte = () => {
   };
 
   const dishOnSubmit = (data, { resetForm }) => {
-    axios.post("http://localhost:3001/dishes", data).then(() => {
-      resetForm();
-      setReload(!reload);
-    });
+    axios
+      .post("http://localhost:3001/dishes", data, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => {
+        resetForm();
+        setReload(!reload);
+      });
   };
 
   const menuOnSubmit = (data, { resetForm }) => {
-    axios.post("http://localhost:3001/menus", data).then(() => {
-      resetForm();
-      setReload(!reload);
-    });
+    axios
+      .post("http://localhost:3001/menus", data, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => {
+        resetForm();
+        setReload(!reload);
+      });
   };
 
   const dishValidationSchema = Yup.object().shape({

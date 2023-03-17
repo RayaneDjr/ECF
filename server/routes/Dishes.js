@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Dishes } = require("../models");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.get("/", async (req, res) => {
   try {
@@ -11,25 +12,33 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
+router.post("/", validateToken, (req, res) => {
   const { title, description, price, category } = req.body;
-  Dishes.create({
-    title,
-    description,
-    price,
-    category,
-  })
-    .then((dish) => res.json(dish))
-    .catch((err) => res.status(500).json({ error: err.message }));
+  if (req.user.role === "admin") {
+    Dishes.create({
+      title,
+      description,
+      price,
+      category,
+    })
+      .then((dish) => res.json(dish))
+      .catch((err) => res.status(500).json({ error: err.message }));
+  } else {
+    return res.json("not authorized");
+  }
 });
 
-router.delete("/:id", async (req, res) => {
-  const id = req.params.id;
-  try {
-    await Dishes.destroy({ where: { id } });
-    res.json("delete succesfull");
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+router.delete("/:id", validateToken, async (req, res) => {
+  if (req.user.role === "admin") {
+    const id = req.params.id;
+    try {
+      await Dishes.destroy({ where: { id } });
+      res.json("delete succesfull");
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  } else {
+    return res.json("not authorized");
   }
 });
 

@@ -3,7 +3,7 @@
   padding-bottom: 15px;
 }
 
-.carte img {
+.delete {
   cursor: pointer;
   margin-left: 5px;
   width: 15px;
@@ -57,7 +57,7 @@
   .when {
     font-size: x-small;
   }
-  .carte img {
+  .delete {
     width: 10px;
   }
 }

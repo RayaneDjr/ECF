@@ -34,12 +34,22 @@ const Carte = ({ enableDelete, reload }) => {
   };
 
   const deleteMenu = (id) => {
-    axios.delete(`http://localhost:3001/menus/${id}`).then(() => fetchMenus());
+    axios
+      .delete(`http://localhost:3001/menus/${id}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
+      .then(() => fetchMenus());
   };
 
   const deleteDish = (id) => {
     axios
-      .delete(`http://localhost:3001/dishes/${id}`)
+      .delete(`http://localhost:3001/dishes/${id}`, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
       .then(() => fetchDishes());
   };
 
@@ -63,6 +73,7 @@ const Carte = ({ enableDelete, reload }) => {
                     <img
                       src={deleteIcon}
                       alt='deleteIcon'
+                      className='delete'
                       onClick={() => deleteMenu(menu.id)}></img>
                   )}
                 </div>
@@ -93,6 +104,7 @@ const Carte = ({ enableDelete, reload }) => {
                             <img
                               src={deleteIcon}
                               alt='deleteIcon'
+                              className='delete'
                               onClick={() => deleteDish(dish.id)}></img>
                           )}
                         </div>
