@@ -1,6 +1,6 @@
 .administration {
   display: flex;
   flex-direction: column;
-  height: 300px;
+  height: 400px;
   justify-content: space-between;
 }

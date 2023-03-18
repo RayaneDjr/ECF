@@ -15,6 +15,7 @@ import Administration from "./pages/Administration";
 import PageNotFound from "./pages/PageNotFound";
 import GererCarte from "./pages/GererCarte";
 import GererGalerie from "./pages/GererGalerie";
+import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 
 function App() {
@@ -81,6 +82,9 @@ function App() {
                 )}
                 {authState.status && authState.role === "admin" && (
                   <Route path='/galerie' element={<GererGalerie />} />
+                )}
+                {authState.status && authState.role === "admin" && (
+                  <Route path='/horaires' element={<Schedule />} />
                 )}
                 {authState.status && authState.role === "admin" && (
                   <Route path='/parametres' element={<Settings />} />

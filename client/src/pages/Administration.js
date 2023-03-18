@@ -16,6 +16,11 @@ const Administration = () => {
         </Link>
       </div>
       <div className='box'>
+        <Link to='/horaires'>
+          <h2>Horaires</h2>
+        </Link>
+      </div>
+      <div className='box'>
         <Link to='/parametres'>
           <h2>Paramètres</h2>
         </Link>
