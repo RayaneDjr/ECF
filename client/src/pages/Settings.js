@@ -87,16 +87,24 @@ const Settings = () => {
       ) {
         setOtherError(false);
         axios
-          .put("http://localhost:3001/schedule", {
-            day,
-            close: null,
-            allDayOpeningTime,
-            allDayClosingTime,
-            morningOpeningTime,
-            morningClosingTime,
-            eveningOpeningTime,
-            eveningClosingTime,
-          })
+          .put(
+            "http://localhost:3001/schedule",
+            {
+              day,
+              close: null,
+              allDayOpeningTime,
+              allDayClosingTime,
+              morningOpeningTime,
+              morningClosingTime,
+              eveningOpeningTime,
+              eveningClosingTime,
+            },
+            {
+              headers: {
+                accessToken: localStorage.getItem("accessToken"),
+              },
+            }
+          )
           .then(() => {
             setReload(!reload);
             setDay("");
@@ -114,16 +122,24 @@ const Settings = () => {
       }
     } else {
       axios
-        .put("http://localhost:3001/schedule", {
-          day,
-          close: true,
-          allDayOpeningTime,
-          allDayClosingTime,
-          morningOpeningTime,
-          morningClosingTime,
-          eveningOpeningTime,
-          eveningClosingTime,
-        })
+        .put(
+          "http://localhost:3001/schedule",
+          {
+            day,
+            close: true,
+            allDayOpeningTime,
+            allDayClosingTime,
+            morningOpeningTime,
+            morningClosingTime,
+            eveningOpeningTime,
+            eveningClosingTime,
+          },
+          {
+            headers: {
+              accessToken: localStorage.getItem("accessToken"),
+            },
+          }
+        )
         .then(() => {
           setReload(!reload);
           setDay("");
