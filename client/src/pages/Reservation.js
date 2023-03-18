@@ -11,11 +11,15 @@ const Reservation = () => {
   const navigate = useNavigate();
   const { authState } = useContext(AuthContext);
   const [initalValues, setInitialValues] = useState({});
+  const [settings, setSettings] = useState([]);
 
   const assignTimes = async (e) => {
     try {
       const response = await axios.get("http://localhost:3001/schedule");
       const date = new Date(e.target.value);
+      const bookings = await axios.get(
+        `http://localhost:3001/bookings/${date.toISOString()}`
+      );
       const times = [];
 
       const getDay = response.data.filter(
@@ -39,10 +43,18 @@ const Reservation = () => {
         ) {
           if (i.getMinutes() !== 0) {
             const formatedTime = i.getHours() + "h" + i.getMinutes();
-            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+            times.push({
+              value: i.toLocaleTimeString(),
+              time: formatedTime,
+              people: 0,
+            });
           } else {
             const formatedTime = i.getHours() + "h";
-            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+            times.push({
+              value: i.toLocaleTimeString(),
+              time: formatedTime,
+              people: 0,
+            });
           }
         }
       }
@@ -68,10 +80,18 @@ const Reservation = () => {
         ) {
           if (i.getMinutes() !== 0) {
             const formatedTime = i.getHours() + "h" + i.getMinutes();
-            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+            times.push({
+              value: i.toLocaleTimeString(),
+              time: formatedTime,
+              people: 0,
+            });
           } else {
             const formatedTime = i.getHours() + "h";
-            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+            times.push({
+              value: i.toLocaleTimeString(),
+              time: formatedTime,
+              people: 0,
+            });
           }
         }
 
@@ -82,18 +102,39 @@ const Reservation = () => {
         ) {
           if (i.getMinutes() !== 0) {
             const formatedTime = i.getHours() + "h" + i.getMinutes();
-            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+            times.push({
+              value: i.toLocaleTimeString(),
+              time: formatedTime,
+              people: 0,
+            });
           } else {
             const formatedTime = i.getHours() + "h";
-            times.push({ value: i.toLocaleTimeString(), time: formatedTime });
+            times.push({
+              value: i.toLocaleTimeString(),
+              time: formatedTime,
+              people: 0,
+            });
           }
         }
       }
 
-      console.log(times);
+      bookings.data.forEach((booking) => {
+        const bookingTime = new Date(`2020-01-01T${booking.time}`);
+        const end = new Date(`2020-01-01T${booking.time}`);
+        end.setMinutes(end.getMinutes() + settings[0].timeToEat);
+
+        for (let i = bookingTime; i < end; i.setMinutes(i.getMinutes() + 15)) {
+          times.forEach((time) => {
+            if (time.value === i.toLocaleTimeString()) {
+              time.people += booking.guests + 1;
+            }
+          });
+        }
+      });
+
       setReservationTimes(times);
     } catch (error) {
-      console.error("Unable to fetch schedule:", error);
+      console.error("Unable to fetch schedule or bookings:", error);
     }
   };
 
@@ -108,6 +149,16 @@ const Reservation = () => {
       allergies: authState.allergies,
       UserId: authState.id,
     });
+
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/settings");
+        setSettings(response.data);
+      } catch (error) {
+        console.error("Unable to fetch settings:", error);
+      }
+    };
+    fetchSettings();
   }, [authState]);
 
   const onSubmit = (data) => {
@@ -196,17 +247,21 @@ const Reservation = () => {
                       {reservationTimes.map((reservationTime) => {
                         return (
                           <div key={reservationTime.value}>
-                            <Field
-                              type='radio'
-                              name='time'
-                              id={reservationTime.value}
-                              value={reservationTime.value}
-                            />
-                            <label
-                              htmlFor={reservationTime.value}
-                              className='times'>
-                              {reservationTime.time}
-                            </label>
+                            {reservationTime.people < settings[0].maxGuests && (
+                              <div>
+                                <Field
+                                  type='radio'
+                                  name='time'
+                                  id={reservationTime.value}
+                                  value={reservationTime.value}
+                                />
+                                <label
+                                  htmlFor={reservationTime.value}
+                                  className='times'>
+                                  {reservationTime.time}
+                                </label>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -228,10 +283,7 @@ const Reservation = () => {
             <Field type='text' name='allergies' />
           </div>
 
-          <button
-            type='click'
-            className='submit'
-            onClick={() => console.log(authState)}>
+          <button type='click' className='submit'>
             Réserver
           </button>
         </Form>
