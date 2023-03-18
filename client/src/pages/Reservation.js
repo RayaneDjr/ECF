@@ -10,16 +10,7 @@ const Reservation = () => {
   const [reservationTimes, setReservationTimes] = useState([]);
   const navigate = useNavigate();
   const { authState } = useContext(AuthContext);
-  const [initalValues, setInitialValues] = useState({
-    firstname: authState.firstname,
-    lastname: authState.lastname,
-    email: authState.email,
-    date: "",
-    time: "",
-    guests: authState.guests,
-    allergies: undefined,
-    UserId: authState.id,
-  });
+  const [initalValues, setInitialValues] = useState({});
 
   const assignTimes = async (e) => {
     try {

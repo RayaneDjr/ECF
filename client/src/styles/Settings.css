@@ -1,0 +1,11 @@
+.morningEvening {
+  font-family: "Hind Madurai", sans-serif;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 700px) {
+  .scheduleSettings {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}

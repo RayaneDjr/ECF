@@ -9,15 +9,7 @@ import { AuthContext } from "../helpers/AuthContext";
 const Profile = () => {
   const navigate = useNavigate();
   const { authState, setAuthState } = useContext(AuthContext);
-  const [initalValues, setInitialValues] = useState({
-    firstname: "",
-    lastname: "",
-    email: "",
-    oldPassword: "",
-    newPassword: "",
-    guests: undefined,
-    allergies: undefined,
-  });
+  const [initalValues, setInitialValues] = useState({});
 
   const onSubmit = (data) => {
     axios

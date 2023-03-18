@@ -7,6 +7,7 @@ import Reservation from "./pages/Reservation";
 import Inscription from "./pages/Inscription";
 import Connexion from "./pages/Connexion";
 import { AuthContext } from "./helpers/AuthContext";
+import { Reload } from "./helpers/Reload";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Profile from "./pages/Profile";
@@ -14,6 +15,7 @@ import Administration from "./pages/Administration";
 import PageNotFound from "./pages/PageNotFound";
 import GererCarte from "./pages/GererCarte";
 import GererGalerie from "./pages/GererGalerie";
+import Settings from "./pages/Settings";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -27,6 +29,8 @@ function App() {
     allergies: undefined,
     status: false,
   });
+
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     axios
@@ -56,34 +60,39 @@ function App() {
   return (
     <div className='App'>
       <AuthContext.Provider value={{ authState, setAuthState }}>
-        <Router>
-          <div>
-            <Header />
-          </div>
-          <main>
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/reservation' element={<Reservation />} />
-              <Route path='/inscription' element={<Inscription />} />
-              <Route path='/connexion' element={<Connexion />} />
-              <Route path='/profile' element={<Profile />} />
-              {authState.status && authState.role === "admin" && (
-                <Route path='/administration' element={<Administration />} />
-              )}
-              <Route path='/profile' element={<Profile />} />
-              {authState.status && authState.role === "admin" && (
-                <Route path='/carte' element={<GererCarte />} />
-              )}
-              {authState.status && authState.role === "admin" && (
-                <Route path='/galerie' element={<GererGalerie />} />
-              )}
-              <Route path='*' element={<PageNotFound />} />
-            </Routes>
-          </main>
-          <div>
-            <Footer />
-          </div>
-        </Router>
+        <Reload.Provider value={{ reload, setReload }}>
+          <Router>
+            <div>
+              <Header />
+            </div>
+            <main>
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/reservation' element={<Reservation />} />
+                <Route path='/inscription' element={<Inscription />} />
+                <Route path='/connexion' element={<Connexion />} />
+                <Route path='/profile' element={<Profile />} />
+                {authState.status && authState.role === "admin" && (
+                  <Route path='/administration' element={<Administration />} />
+                )}
+                <Route path='/profile' element={<Profile />} />
+                {authState.status && authState.role === "admin" && (
+                  <Route path='/carte' element={<GererCarte />} />
+                )}
+                {authState.status && authState.role === "admin" && (
+                  <Route path='/galerie' element={<GererGalerie />} />
+                )}
+                {authState.status && authState.role === "admin" && (
+                  <Route path='/parametres' element={<Settings />} />
+                )}
+                <Route path='*' element={<PageNotFound />} />
+              </Routes>
+            </main>
+            <div>
+              <Footer reload={reload} />
+            </div>
+          </Router>
+        </Reload.Provider>
       </AuthContext.Provider>
     </div>
   );

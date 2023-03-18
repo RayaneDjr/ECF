@@ -15,6 +15,11 @@ const Administration = () => {
           <h2>Carte</h2>
         </Link>
       </div>
+      <div className='box'>
+        <Link to='/parametres'>
+          <h2>Paramètres</h2>
+        </Link>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/Footer.css";
 
-const Footer = () => {
+const Footer = ({ reload }) => {
   const [schedule, setSchedule] = useState([]);
 
   const assignSchedule = (data) => {
@@ -87,7 +87,7 @@ const Footer = () => {
     };
 
     fetchSchedule();
-  }, []);
+  }, [reload]);
 
   return (
     <footer>
