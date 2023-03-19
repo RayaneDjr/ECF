@@ -19,6 +19,7 @@ import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
 import BookList from "./pages/BookList";
 import ChangeBooking from "./pages/ChangeBooking";
+import MyBookings from "./pages/MyBookings";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -74,7 +75,9 @@ function App() {
                 <Route path='/reservation' element={<Reservation />} />
                 <Route path='/inscription' element={<Inscription />} />
                 <Route path='/connexion' element={<Connexion />} />
-                <Route path='/profile' element={<Profile />} />
+                {authState.status && (
+                  <Route path='/profile' element={<Profile />} />
+                )}
                 {authState.status && authState.role === "admin" && (
                   <Route path='/administration' element={<Administration />} />
                 )}
@@ -98,6 +101,12 @@ function App() {
                   <Route
                     path='/changeBooking/:id'
                     element={<ChangeBooking />}
+                  />
+                )}
+                {authState.status && (
+                  <Route
+                    path='/myreservations/:UserId'
+                    element={<MyBookings />}
                   />
                 )}
                 <Route path='*' element={<PageNotFound />} />

@@ -80,6 +80,12 @@ a {
   color: black;
 }
 
+.buttonsContainer {
+  display: flex;
+  width: 70%;
+  justify-content: space-evenly;
+}
+
 @media screen and (max-width: 700px) {
   h2 {
     font-size: large;
@@ -98,5 +104,13 @@ a {
   }
   .delete {
     width: 10px;
+  }
+  .buttonsContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .buttonsContainer button {
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 }

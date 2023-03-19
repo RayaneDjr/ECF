@@ -56,6 +56,16 @@ router.get("/byDate/:date", async (req, res) => {
   }
 });
 
+router.get("/byUserId/:UserId", async (req, res) => {
+  try {
+    const UserId = req.params.UserId;
+    const bookings = await Bookings.findAll({ where: { UserId } });
+    res.json(bookings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.get("/byId/:id", validateToken, async (req, res) => {
   try {
     const id = req.params.id;

@@ -116,9 +116,17 @@ const Profile = () => {
           <Field type='text' name='allergies' />
         </div>
 
-        <button type='submit' className='submit'>
-          Modifier
-        </button>
+        <div className='buttonsContainer'>
+          <button type='submit' className='submit'>
+            Modifier
+          </button>
+          <button
+            type='button'
+            className='submit'
+            onClick={() => navigate(`/myreservations/${authState.id}`)}>
+            Réservations
+          </button>
+        </div>
       </Form>
     </Formik>
   );

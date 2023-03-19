@@ -133,7 +133,6 @@ const Reservation = () => {
           });
         }
       });
-
       setReservationTimes(times);
     } catch (error) {
       console.error("Unable to fetch schedule or bookings:", error);

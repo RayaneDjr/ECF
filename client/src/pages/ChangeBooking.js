@@ -120,7 +120,6 @@ const ChangeBooking = () => {
           }
         }
       }
-      console.log(currentBooking);
 
       bookings.data.forEach((booking) => {
         const bookingTime = new Date(`2020-01-01T${booking.time}`);
@@ -151,7 +150,6 @@ const ChangeBooking = () => {
           }
         });
       }
-      console.log(times);
       setReservationTimes(times);
     } catch (error) {
       console.error("Unable to fetch schedule or bookings:", error);
@@ -161,7 +159,6 @@ const ChangeBooking = () => {
   const onSubmit = (values) => {
     const data = values;
     data.date = data.date.toISOString().split("T")[0];
-    console.log(data);
     axios
       .put(`http://localhost:3001/bookings/${currentBooking.id}`, data, {
         headers: {
@@ -215,7 +212,6 @@ const ChangeBooking = () => {
               },
             }
           );
-          console.log(response.data);
           setInitialValues({
             firstname: response.data.firstname,
             lastname: response.data.lastname,
