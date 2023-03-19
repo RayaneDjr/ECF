@@ -40,7 +40,8 @@ const Carte = ({ enableDelete, reload }) => {
           accessToken: localStorage.getItem("accessToken"),
         },
       })
-      .then(() => fetchMenus());
+      .then(() => fetchMenus())
+      .catch((error) => console.error("Unable to delete:", error));
   };
 
   const deleteDish = (id) => {
@@ -50,7 +51,8 @@ const Carte = ({ enableDelete, reload }) => {
           accessToken: localStorage.getItem("accessToken"),
         },
       })
-      .then(() => fetchDishes());
+      .then(() => fetchDishes())
+      .catch((error) => console.error("Unable to delete:", error));
   };
 
   useEffect(() => {

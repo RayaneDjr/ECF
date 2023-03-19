@@ -29,20 +29,20 @@ const Header = () => {
         {!authState.status ? (
           <>
             <Link to='/connexion' className='link'>
-              Se connecter
+              se connecter
             </Link>
             <Link to='/inscription' className='link'>
-              Créer un compte
+              créer un compte
             </Link>
           </>
         ) : (
           <>
             <Link to='/' onClick={logout} className='link'>
-              Se déconnecter
+              se déconnecter
             </Link>
             {authState.role === "admin" && (
               <Link to='/administration' className='link'>
-                Administration
+                administration
               </Link>
             )}
             <Link to='/profile' className='link'>

@@ -76,6 +76,10 @@ label {
   width: 15px;
 }
 
+a {
+  color: black;
+}
+
 @media screen and (max-width: 700px) {
   h2 {
     font-size: large;

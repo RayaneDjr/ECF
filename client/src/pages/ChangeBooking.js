@@ -1,29 +1,30 @@
-import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import "../styles/Reservation.css";
-import { AuthContext } from "../helpers/AuthContext";
 
-const Reservation = () => {
+const ChangeBooking = () => {
+  const { id } = useParams();
   const [reservationTimes, setReservationTimes] = useState([]);
   const navigate = useNavigate();
-  const { authState } = useContext(AuthContext);
-  const [initalValues, setInitialValues] = useState({});
-  const [settings, setSettings] = useState([]);
+  const [settingsReceived, setSettingsReceived] = useState(false);
+  const [bookingReceived, setBookingReceived] = useState(false);
+  const [currentBooking, setCurrentBooking] = useState({});
+  const [initalValues, setInitialValues] = useState({ date: new Date() });
+  const [settings, setSettings] = useState([{ timeToEat: 10 }]);
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const assignTimes = async (e) => {
+  const assignTimes = async (selectedDate) => {
     try {
       const response = await axios.get("http://localhost:3001/schedule");
-      const date = new Date(e.target.value);
+      const date = new Date(selectedDate);
       const bookings = await axios.get(
         `http://localhost:3001/bookings/byDate/${date.toISOString()}`
       );
       const times = [];
-
       const getDay = response.data.filter(
         (day) =>
           day.day === date.toLocaleDateString("fr-FR", { weekday: "long" })
@@ -119,6 +120,7 @@ const Reservation = () => {
           }
         }
       }
+      console.log(currentBooking);
 
       bookings.data.forEach((booking) => {
         const bookingTime = new Date(`2020-01-01T${booking.time}`);
@@ -134,38 +136,38 @@ const Reservation = () => {
         }
       });
 
+      const currentBookingTime = new Date(`2020-01-01T${currentBooking.time}`);
+      const end = new Date(`2020-01-01T${currentBooking.time}`);
+      end.setMinutes(end.getMinutes() + settings[0].timeToEat);
+
+      for (
+        let i = currentBookingTime;
+        i < end;
+        i.setMinutes(i.getMinutes() + 15)
+      ) {
+        times.forEach((time) => {
+          if (time.value === i.toLocaleTimeString()) {
+            time.people -= currentBooking.guests + 1;
+          }
+        });
+      }
+      console.log(times);
       setReservationTimes(times);
     } catch (error) {
       console.error("Unable to fetch schedule or bookings:", error);
     }
   };
 
-  useEffect(() => {
-    setInitialValues({
-      firstname: authState.firstname,
-      lastname: authState.lastname,
-      email: authState.email,
-      date: "",
-      time: "",
-      guests: authState.guests,
-      allergies: authState.allergies,
-      UserId: authState.id,
-    });
-
-    const fetchSettings = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/settings");
-        setSettings(response.data);
-      } catch (error) {
-        console.error("Unable to fetch settings:", error);
-      }
-    };
-    fetchSettings();
-  }, [authState]);
-
-  const onSubmit = (data) => {
+  const onSubmit = (values) => {
+    const data = values;
+    data.date = data.date.toISOString().split("T")[0];
+    console.log(data);
     axios
-      .post("http://localhost:3001/bookings", data)
+      .put(`http://localhost:3001/bookings/${currentBooking.id}`, data, {
+        headers: {
+          accessToken: localStorage.getItem("accessToken"),
+        },
+      })
       .then(() => {
         navigate("/");
       })
@@ -187,13 +189,68 @@ const Reservation = () => {
       .typeError("Vous devez saisir un nombre entre 0 et 9"),
   });
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/settings");
+        setSettings(response.data);
+        setSettingsReceived(true);
+      } catch (error) {
+        console.error("Unable to fetch settings:", error);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
+  useEffect(() => {
+    if (settingsReceived) {
+      const fetchBookings = async (date) => {
+        try {
+          const response = await axios.get(
+            `http://localhost:3001/bookings/byId/${id}`,
+            {
+              headers: {
+                accessToken: localStorage.getItem("accessToken"),
+              },
+            }
+          );
+          console.log(response.data);
+          setInitialValues({
+            firstname: response.data.firstname,
+            lastname: response.data.lastname,
+            email: response.data.email,
+            date: new Date(response.data.date),
+            time: response.data.time,
+            guests: response.data.guests,
+            allergies: response.data.allergies,
+            UserId: response.data.id,
+          });
+          setCurrentBooking(response.data);
+          setBookingReceived(true);
+        } catch (error) {
+          console.error("Unable to fetch bookings", error);
+        }
+      };
+
+      fetchBookings();
+    }
+  }, [settingsReceived, id]);
+
+  useEffect(() => {
+    if (bookingReceived) {
+      assignTimes(currentBooking.date);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bookingReceived]);
+
   return (
     <Formik
       enableReinitialize
       initialValues={initalValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}>
-      {({ handleChange, values }) => (
+      {({ handleChange, values, setValues }) => (
         <Form className='box reservationFormContainer'>
           <h2>Réserver</h2>
 
@@ -221,10 +278,12 @@ const Reservation = () => {
             <Field
               type='date'
               name='date'
+              value={values.date.toISOString().split("T")[0]}
               min={tomorrow.toISOString().split("T")[0]}
               onChange={(e) => {
                 handleChange(e);
-                assignTimes(e);
+                setValues({ ...values, date: new Date(e.target.value) });
+                assignTimes(e.target.value, values, setValues);
               }}
             />
           </div>
@@ -294,4 +353,4 @@ const Reservation = () => {
   );
 };
 
-export default Reservation;
+export default ChangeBooking;

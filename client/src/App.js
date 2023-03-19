@@ -17,6 +17,8 @@ import GererCarte from "./pages/GererCarte";
 import GererGalerie from "./pages/GererGalerie";
 import Schedule from "./pages/Schedule";
 import Settings from "./pages/Settings";
+import BookList from "./pages/BookList";
+import ChangeBooking from "./pages/ChangeBooking";
 
 function App() {
   const [authState, setAuthState] = useState({
@@ -88,6 +90,15 @@ function App() {
                 )}
                 {authState.status && authState.role === "admin" && (
                   <Route path='/parametres' element={<Settings />} />
+                )}
+                {authState.status && authState.role === "admin" && (
+                  <Route path='/reservationlist' element={<BookList />} />
+                )}
+                {authState.status && (
+                  <Route
+                    path='/changeBooking/:id'
+                    element={<ChangeBooking />}
+                  />
                 )}
                 <Route path='*' element={<PageNotFound />} />
               </Routes>

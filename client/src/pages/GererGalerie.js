@@ -59,7 +59,8 @@ const GererGalerie = () => {
       .then(() => {
         setReload(!reload);
         fetchGalleryItems();
-      });
+      })
+      .catch((error) => console.error("Unable to delete:", error));
   };
 
   useEffect(() => {

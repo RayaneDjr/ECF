@@ -37,10 +37,10 @@ const Inscription = () => {
     email: Yup.string()
       .email("Vous devez saisir une addresse email valide")
       .required("Vous devez saisir une addresse email valide"),
-    guests: Yup.number("Vous devez saisir un nombre entre 0 et 10")
-      .min(0, "Vous devez saisir un nombre entre 0 et 10")
-      .max(10, "Vous devez saisir un nombre entre 0 et 10")
-      .required("Vous devez saisir un nombre entre 0 et 10"),
+    guests: Yup.number("Vous devez saisir un nombre entre 0 et 9")
+      .min(0, "Vous devez saisir un nombre entre 0 et 9")
+      .max(9, "Vous devez saisir un nombre entre 0 et 9")
+      .required("Vous devez saisir un nombre entre 0 et 9"),
   });
 
   return (
