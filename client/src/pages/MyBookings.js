@@ -7,7 +7,6 @@ const MyBookings = () => {
   const { UserId } = useParams();
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
-  const today = new Date();
 
   const deleteBooking = (id) => {
     axios
@@ -25,10 +24,16 @@ const MyBookings = () => {
   const fetchBookings = async (UserId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3001/bookings/byUserId/${UserId}`
+        `http://localhost:3001/bookings/byUserId/${UserId}`,
+        {
+          headers: {
+            accessToken: localStorage.getItem("accessToken"),
+          },
+        }
       );
 
       const check = (date) => {
+        const today = new Date();
         const bookingDate = new Date(date);
         if (bookingDate >= today) {
           return true;

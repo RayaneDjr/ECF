@@ -56,7 +56,7 @@ router.get("/byDate/:date", async (req, res) => {
   }
 });
 
-router.get("/byUserId/:UserId", async (req, res) => {
+router.get("/byUserId/:UserId", validateToken, async (req, res) => {
   try {
     const UserId = req.params.UserId;
     const bookings = await Bookings.findAll({ where: { UserId } });
