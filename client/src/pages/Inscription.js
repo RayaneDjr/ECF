@@ -24,7 +24,7 @@ const Inscription = () => {
         if (response.data.error) {
           alert(response.data.error);
         } else {
-          navigate("/");
+          navigate("/connexion");
         }
       })
       .catch((error) => console.error("Error in submit:", error));
@@ -33,7 +33,21 @@ const Inscription = () => {
   const validationSchema = Yup.object().shape({
     firstname: Yup.string().required("Vous devez saisir un prénom"),
     lastname: Yup.string().required("Vous devez saisir un nom"),
-    password: Yup.string().required("Vous devez saisir un mot de passe"),
+    password: Yup.string()
+      .required("Vous devez saisir un mot de passe")
+      .min(6, "Le mot de passe doit contenir au moins 6 caractères")
+      .matches(
+        /^(?=.*[a-z])/,
+        "Le mot de passe doit contenir au moins une lettre minuscule"
+      )
+      .matches(
+        /^(?=.*[A-Z])/,
+        "Le mot de passe doit contenir au moins une lettre majuscule"
+      )
+      .matches(
+        /^(?=.*[0-9])/,
+        "Le mot de passe doit contenir au moins un nombre"
+      ),
     email: Yup.string()
       .email("Vous devez saisir une addresse email valide")
       .required("Vous devez saisir une addresse email valide"),

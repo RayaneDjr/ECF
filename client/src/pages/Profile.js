@@ -45,6 +45,20 @@ const Profile = () => {
     oldPassword: Yup.string().required(
       "Vous devez saisir votre ancien mot de passe"
     ),
+    newPassword: Yup.string()
+      .min(6, "Le mot de passe doit contenir au moins 6 caractères")
+      .matches(
+        /^(?=.*[a-z])/,
+        "Le mot de passe doit contenir au moins une lettre minuscule"
+      )
+      .matches(
+        /^(?=.*[A-Z])/,
+        "Le mot de passe doit contenir au moins une lettre majuscule"
+      )
+      .matches(
+        /^(?=.*[0-9])/,
+        "Le mot de passe doit contenir au moins un nombre"
+      ),
     email: Yup.string()
       .email("Vous devez saisir une addresse email valide")
       .required("Vous devez saisir une addresse email valide"),
