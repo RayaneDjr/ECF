@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 app.use(express.json());
 app.use(cors());
@@ -101,7 +101,7 @@ db.sequelize.sync().then(() => {
       },
     });
   });
-  app.listen(3001, () => {
+  app.listen(process.env.PORT || 3001, () => {
     console.log("server running at port 3001");
   });
 });
