@@ -1,16 +1,12 @@
 import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const navigate = useNavigate();
-
-  const initialValues = {
-    maxGuests: "",
-    timeToEat: "",
-  };
+  const [initialValues, setInitialValues] = useState({});
 
   const onSubmit = (data, { resetForm }) => {
     axios
@@ -35,9 +31,26 @@ const Settings = () => {
     ),
   });
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/settings");
+        setInitialValues({
+          maxGuests: response.data[0].maxGuests,
+          timeToEat: response.data[0].timeToEat,
+        });
+      } catch (error) {
+        console.error("Unable to fetch settings:", error);
+      }
+    };
+
+    fetchSettings();
+  });
+
   return (
     <div>
       <Formik
+        enableReinitialize
         initialValues={initialValues}
         onSubmit={onSubmit}
         validationSchema={validationSchema}>

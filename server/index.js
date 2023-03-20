@@ -23,8 +23,8 @@ app.use("/users", usersRouter);
 const settingsRouter = require("./routes/Settings");
 app.use("/settings", settingsRouter);
 
-db.sequelize.sync().then(() => {
-  db.Schedule.findOrCreate({
+db.sequelize.sync().then(async () => {
+  await db.Schedule.findOrCreate({
     where: {
       day: "lundi",
     },
@@ -33,7 +33,7 @@ db.sequelize.sync().then(() => {
       close: true,
     },
   });
-  db.Schedule.findOrCreate({
+  await db.Schedule.findOrCreate({
     where: {
       day: "mardi",
     },
@@ -42,7 +42,7 @@ db.sequelize.sync().then(() => {
       close: true,
     },
   });
-  db.Schedule.findOrCreate({
+  await db.Schedule.findOrCreate({
     where: {
       day: "mercredi",
     },
@@ -51,7 +51,7 @@ db.sequelize.sync().then(() => {
       close: true,
     },
   });
-  db.Schedule.findOrCreate({
+  await db.Schedule.findOrCreate({
     where: {
       day: "jeudi",
     },
@@ -60,7 +60,7 @@ db.sequelize.sync().then(() => {
       close: true,
     },
   });
-  db.Schedule.findOrCreate({
+  await db.Schedule.findOrCreate({
     where: {
       day: "vendredi",
     },
@@ -69,7 +69,7 @@ db.sequelize.sync().then(() => {
       close: true,
     },
   });
-  db.Schedule.findOrCreate({
+  await db.Schedule.findOrCreate({
     where: {
       day: "samedi",
     },
@@ -78,7 +78,7 @@ db.sequelize.sync().then(() => {
       close: true,
     },
   });
-  db.Schedule.findOrCreate({
+  await db.Schedule.findOrCreate({
     where: {
       day: "dimanche",
     },
@@ -87,8 +87,8 @@ db.sequelize.sync().then(() => {
       close: true,
     },
   });
-  bcrypt.hash("admin", 10).then((hash) => {
-    db.Users.findOrCreate({
+  bcrypt.hash("Admin@123456", 10).then(async (hash) => {
+    await db.Users.findOrCreate({
       where: {
         role: "admin",
       },
@@ -98,8 +98,19 @@ db.sequelize.sync().then(() => {
         email: "admin@mail.com",
         password: hash,
         role: "admin",
+        guests: 0,
       },
     });
+  });
+  await db.Settings.findOrCreate({
+    where: {
+      id: 1,
+    },
+    defaults: {
+      id: 1,
+      maxGuests: 50,
+      timeToEat: 60,
+    },
   });
   app.listen(process.env.PORT || 3001, () => {
     console.log("server running at port 3001");

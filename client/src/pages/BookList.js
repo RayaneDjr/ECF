@@ -58,6 +58,11 @@ const BookList = () => {
           <input type='date' value={date} onChange={handleDate} />
         </div>
       </div>
+      {bookings.length === 0 && (
+        <div className='box'>
+          <h2 className='error'>Aucune réservation</h2>
+        </div>
+      )}
       {bookings.map((booking) => {
         return (
           <div className='box bookingContainer'>
