@@ -13,7 +13,7 @@ const ChangeBooking = () => {
   const [bookingReceived, setBookingReceived] = useState(false);
   const [currentBooking, setCurrentBooking] = useState({});
   const [initalValues, setInitialValues] = useState({ date: new Date() });
-  const [settings, setSettings] = useState([{ timeToEat: 10 }]);
+  const [settings, setSettings] = useState([]);
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
 
