@@ -68,6 +68,25 @@ function Gallery({ reload }) {
             className={slideIndex === index + 1 ? "dot active" : "dot"}></div>
         ))}
       </div>
+
+      {galleryItems.length === 0 && (
+        <>
+          <div className={slideIndex === 0 + 1 ? "slide active-anim" : "slide"}>
+            <img
+              src='https://cdn.signitic.fr/6267b6cdb7325944795758.png'
+              alt='imageDefault'
+            />
+          </div>
+          <BtnSlider moveSlide={() => setSlideIndex(1)} direction={"next"} />
+          <BtnSlider moveSlide={() => setSlideIndex(1)} direction={"prev"} />
+
+          <div className='container-dots'>
+            <div
+              onClick={() => moveDot(0 + 1)}
+              className={slideIndex === 0 + 1 ? "dot active" : "dot"}></div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
